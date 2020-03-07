@@ -98,26 +98,31 @@ def bot_loop():
             
 				channel_id = CHAT_NAMES_TO_ID[channel]
 				print (channel_id)
+#				channel_id = "40972890"
 
-				clip_id = twitch.create_clip(channel_id)
-				time.sleep(5)
-				
-				if clip_id and twitch.is_there_clip(clip_id):
-				
-					myThread = threading.Timer(5, proccess_clip, args=[clip_id, username,channel])
-					myThread.start()
-					
-					
-				else:
-					print ("Second try")
+				if twitch.is_stream_live(channel_id): 
 					clip_id = twitch.create_clip(channel_id)
+					time.sleep(5)
 					
-					if (clip_id):
-				
-						myThread = threading.Timer(10, proccess_clip, args=[clip_id, username,channel])
-						myThread.start()                        
+					if clip_id and twitch.is_there_clip(clip_id):
+					
+						myThread = threading.Timer(5, proccess_clip, args=[clip_id, username,channel])
+						myThread.start()
+						
+						
 					else:
-						utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
+						print ("Second try")
+						clip_id = twitch.create_clip(channel_id)
+						
+						if (clip_id):
+					
+							myThread = threading.Timer(10, proccess_clip, args=[clip_id, username,channel])
+							myThread.start()                        
+						else:
+							utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
+				else:
+					utility.chat(s, channel,username + ", the stream is offline, clipping is disabled")
+
                     
 #			!Hey
 			if message == "!hey":
