@@ -138,4 +138,3 @@ dmypy.json
 # Pyre type checker
 .pyre/
 config.py
-config.py
