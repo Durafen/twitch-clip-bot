@@ -62,7 +62,6 @@ def auth():
 
 def get_access_token():
 
-    status = "Yay"
 #    url = "?grant_type=refresh_token&refresh_token=" + config.CLIENT_REFRESH_TOKEN + "&client_id=" + config.CLIENT_ID + "&client_secret=" + config.CLIENT_SECRET
 
     url = "https://id.twitch.tv/oauth2/token"
