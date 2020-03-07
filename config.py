@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 HOST = "irc.twitch.tv"              # This is Twitchs IRC server
 PORT = 6667                         # Twitchs IRC server listens on port 6767
 NICK = "BOT TWITCH NICK"            # Twitch username your using for your bot
