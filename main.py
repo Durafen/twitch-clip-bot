@@ -113,7 +113,7 @@ def proccess_clip(clip_id,username):
 		clip_url = "https://clips.twitch.tv/" + clip_id 
 #		print clip_url
 		utility.chat(s,clip_url)
-		write_tofile(clip_url + "\n")
+		utility.write_tofile(clip_url + "\n")
 
 	else:
 		utility.chat(s,"Sorry " + username + ", twitch couldn't make the clip")
