@@ -45,18 +45,24 @@ def get_access_token_bad():
     return data["access_token"]
     
 
-def auth():
+def auth(code):
 
-#   CHANGE TO PYTHON 3
+#   CHANGE TO PYTHON 3 and CHECK!
 
-    status = "Yay"
-    url = "https://id.twitch.tv/oauth2/token?client_id=" + config.CLIENT_ID + "&client_secret="  + config.CLIENT_SECRET + "&code=lv1tcwmo8gidqzkj2ipk62po8evg16&grant_type=authorization_code&redirect_uri=http://localhost"
+    url = "https://id.twitch.tv/oauth2/token"
+#    url = "https://id.twitch.tv/oauth2/token?client_id=" + config.CLIENT_ID + "&client_secret="  + config.CLIENT_SECRET + "&code=lv1tcwmo8gidqzkj2ipk62po8evg16&grant_type=authorization_code&redirect_uri=http://localhost"
+    data = urllib.parse.urlencode({
+                                    'client_id' : config.CLIENT_ID,
+                                    'client_secret' : config.CLIENT_SECRET,                                   
+                                    'code' : code,
+                                    'grant_type' : 'authorization_code',
+                                    'redirect_uri' : 'http://localhost'
+                                    })
     
-#    print (url)
-    
-    req = urllib.request.Request(url,data = '{"message":{"body":'+ status +'}}')
+    data = data.encode('utf-8')
+    req = urllib.request.Request(url)
 
-    response = urllib.request.urlopen(req)
+    response = urllib.request.urlopen(req, data = data)
     data = json.load(response)   
     print (data)
 
@@ -144,8 +150,6 @@ def is_there_clip(clip_id):
 
 def create_clip(channel_id):
 
-
-
     url = "https://api.twitch.tv/helix/clips"
     data = urllib.parse.urlencode({
                                     'has_delay' : 'true',
@@ -228,12 +232,6 @@ myThread = threading.Timer(3600, do_refresh_token)
 myThread.start()
 
 
-
 if __name__ == "__main__":
-	test()
+    print ("Hello")
 	
-	
-	
-
-
-
