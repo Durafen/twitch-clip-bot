@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 import socket
 import time
 import re
@@ -12,8 +13,6 @@ import utility
 COMMANDS = [
 #	[r"!discord", "the official discord: ____"]
 ]
-
-channel_id = "CHANNEL ID !!!!!!!"
 
 
 CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
@@ -58,17 +57,17 @@ def bot_loop():
 				utility.restart()
 
 #			print("Pong")
+
 		else:
+		
 			username = re.search(r"\w+", response).group(0) 
 			message = CHAT_MSG.sub("", response)
-			
-			
-			print (username + " : " + message.rstrip())
 						
+			print (username + " : " + message.rstrip())						
 
 			if message.rstrip() == "!clip" or message.rstrip() == "clip":
             
-				clip_id = twitch.create_clip(channel_id)
+				clip_id = twitch.create_clip(config.CHANNEL_ID)
 				time.sleep(5)
 				
 				if clip_id and twitch.is_there_clip(clip_id):
@@ -79,7 +78,7 @@ def bot_loop():
 					
 				else:
 					print "Second try"
-					clip_id = twitch.create_clip(channel_id)
+					clip_id = twitch.create_clip(config.CHANNEL_ID)
 					
 					if (clip_id):
 				
@@ -94,15 +93,14 @@ def bot_loop():
 				utility.chat(s,"Hey " + username + "! Whats up?")
 
 			if message.rstrip() == "!help":
-				utility.chat(s, username + ", I'm the clipping bot. type !clip in chat, I'll clip the last 25 sec and post the link.")
+				utility.chat(s, username + ", I'm the clipping bot. type \"clip\" or \"!clip\" in chat, I'll clip the last 25 sec and post the link.")
 					
             
-
 		for pattern in COMMANDS:
 			if re.match(pattern[0], message):
 				utility.chat(s, pattern[1])
 
-		time.sleep(0.2)
+		time.sleep(0.1)
 		    
 			
 #			print(username + ": " + response)
@@ -115,35 +113,20 @@ def proccess_clip(clip_id,username):
 	print clip_id
     
 	if twitch.is_there_clip(clip_id):
-		clip_url = "https://clips.twitch.tv/" + clip_id + "\n"
+		clip_url = "https://clips.twitch.tv/" + clip_id 
 #		print clip_url
 		utility.chat(s,clip_url)
-		write_file(clip_url)
+		write_tofile(clip_url + "\n")
 
 	else:
 		utility.chat(s,"Sorry " + username + ", twitch couldn't make the clip")
 			
 
-def write_file(text):
-	file = open("cliplog.txt","a") 	
-	file.write(text)
-	file.close() 
-
-
 if __name__ == "__main__":
 	
-
-
-#	myThread = threading.Timer(3, proccess_clip, args=["CaringClearGerbilDancingBanana", "durafen"])
-#	myThread.start()
-
-	
-#	print "before"
-#	time.sleep(5)
-#	print "after"
  
-
 	bot_loop()
+
 	
 #	access_token = twitch.get_access_token()
 #	twitch.auth1()

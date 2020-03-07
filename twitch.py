@@ -1,12 +1,11 @@
+#!/usr/bin/env python
+
 import urllib2
 import json
 import threading
 
 import utility
 import config
-
-
-
 
 
 access_token  = ""
@@ -96,8 +95,7 @@ def get_channel_id(channel_name):
 #    print data
 #    print data["access_token"]
 
-    return data["users"][0]["_id"]
-    
+    return data["users"][0]["_id"]    
 
 
 
@@ -179,7 +177,6 @@ def is_stream_live(channel_id):
 #       print result
     
     except IndexError:
-    # handle this
 #	  	print "false"
         return False
     
@@ -191,29 +188,17 @@ def is_stream_live(channel_id):
 
 
 
-def test():
+#def test():
      
 
 #    channel_id = get_channel_id("onwardmasterleague")
 #    print channel_id
 
-    print is_stream_live("159319477")
-    
-    
-#    access_token = get_access_token()
-#    print access_token
-    
-#    clip_id = create_clip(access_token, channel_id)
-#    clip_url = "https://clips.twitch.tv/" + clip_id
-#    print (clip_url)
-    
+#    print is_stream_live("159319477")
+            
 #    auth()
 #    access_token = get_access_token()
 #    print access_token
-
-
-#    print is_there_clip("BenevolentAttractiveLarkAMPTropPunch")
-
 
 
 print "Starting Twitch API"
@@ -221,7 +206,7 @@ get_access_token()
 print access_token
 print "Token Refreshed"
 
-myThread = threading.Timer(3600, do_refresh_token)  # timer is set to 3 seconds
+myThread = threading.Timer(3600, do_refresh_token)  
 myThread.start()
 
 

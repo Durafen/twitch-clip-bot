@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import config
 import socket
 import time
@@ -26,3 +28,9 @@ def restart():
 	#os.execv(__file__, sys.argv)	
 	os.execv(sys.executable, ['python'] + sys.argv)
 	
+
+def write_tofile(text):
+	file = open("cliplog.txt","a") 	
+	file.write(text)
+	file.close() 
+
