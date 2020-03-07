@@ -26,7 +26,7 @@ def restart():
 	print ("Restarting")
 	time.sleep (5)
 	#os.execv(__file__, sys.argv)	
-	os.execv(sys.executable, ['python'] + sys.argv)
+	os.execv(sys.executable, ['python3'] + sys.argv)
 	
 
 def write_tofile(text):

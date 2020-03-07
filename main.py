@@ -20,10 +20,10 @@ CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
 
 
 try:
-	s = socket.socket()
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-	#s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
+	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
 	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, 1)
 	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPCNT, 5)
 

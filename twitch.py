@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
+import urllib
+import urllib.parse
 import urllib.request
-from urllib.parse import urlencode
 
 from urllib.error import HTTPError, URLError
 
@@ -81,9 +82,9 @@ def get_access_token():
 	    response = urllib.request.urlopen(req, data = data)
     
     except (HTTPError, URLError) as err:
-       print ("HTTP Error" + err.reason)
+       print ("HTTP Error" + str(err))
+       
        utility.restart()
-
 
     
     data = json.load(response)   
@@ -161,7 +162,7 @@ def create_clip(channel_id):
         response = urllib.request.urlopen(req,data)    
     
     except (HTTPError, URLError) as err:
-       print ("HTTP Error" + err.reason)
+       print ("HTTP Error" + str(err))
        return 0
 
     
