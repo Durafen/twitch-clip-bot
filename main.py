@@ -151,13 +151,3 @@ if __name__ == "__main__":
 	
 	
 	
-##      TO DO 
-##------------------
-##
-## 1. Add second clip create if 0.5 time after the creating its not created.
-## 2. Add saving to file all the links to clip that was created.
-##
-##
-##
-
-	
