@@ -14,10 +14,7 @@ COMMANDS = [
 #	[r"!discord", "the official discord: ____"]
 ]
 
-
 CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
-
-
 
 try:
 	s = socket.socket()
