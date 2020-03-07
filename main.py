@@ -23,9 +23,11 @@ try:
 	s = socket.socket()
 	
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
+	#s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
 	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, 1)
 	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPCNT, 5)
+
+
 
 	s.connect((config.HOST, config.PORT))
 	s.send("PASS {}\r\n".format(config.PASS).encode("utf-8"))
@@ -53,7 +55,7 @@ def bot_loop():
 			try:	
 				s.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))			
 			except IOError as e:
-				print "PONG error:", str(e)
+				print ("PONG error:" + str(e))
 				utility.restart()
 
 #			print("Pong")
@@ -77,7 +79,7 @@ def bot_loop():
 					
 					
 				else:
-					print "Second try"
+					print ("Second try")
 					clip_id = twitch.create_clip(config.CHANNEL_ID)
 					
 					if (clip_id):
@@ -110,13 +112,13 @@ def bot_loop():
 #					break
 
 def proccess_clip(clip_id,username):
-	print clip_id
+	print (clip_id)
     
 	if twitch.is_there_clip(clip_id):
 		clip_url = "https://clips.twitch.tv/" + clip_id 
-#		print clip_url
+#		print (clip_url)
 		utility.chat(s,clip_url)
-		write_tofile(clip_url + "\n")
+		utility.write_tofile(clip_url + "\n")
 
 	else:
 		utility.chat(s,"Sorry " + username + ", twitch couldn't make the clip")
@@ -130,7 +132,7 @@ if __name__ == "__main__":
 	
 #	access_token = twitch.get_access_token()
 #	twitch.auth1()
-#	print access_token	
+#	print (access_token)
 	
 	
 	
