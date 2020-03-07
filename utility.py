@@ -7,10 +7,11 @@ import sys
 import os
 
 
-def chat(sock, msg):
+def chat(sock, channel_name, msg):
 
-	sock.send(("PRIVMSG {} :{}\r\n".format(config.CHAN, msg)).encode("UTF-8"))
-	print ("Sending -> " + msg)
+	(sock.send(("PRIVMSG {} :{}\r\n".format(channel_name, msg)).encode("UTF-8")))
+
+	print (channel_name + " -> " + msg)
 #	print msg
 
 #def ban(sock, user):

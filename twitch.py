@@ -134,10 +134,10 @@ def is_there_clip(clip_id):
         result = data["data"][0]["id"]
     
     except IndexError:
-        print ("false")
+#        print ("false")
         return False
     
-    print ("true")
+ #   print ("true")
     return True
 
 
