@@ -132,7 +132,12 @@ def is_there_clip(clip_id):
                     },
                       data = None)
                       
-    response = urllib.request.urlopen(req)
+    try:                      
+        response = urllib.request.urlopen(req)
+    except (HTTPError, URLError) as err:
+        print ("HTTP Error" + str(err))
+        utility.restart()
+
     data = json.load(response)   
 #    print (data)
     

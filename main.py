@@ -35,8 +35,6 @@ try:
 	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, 1)
 	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPCNT, 5)
 
-
-
 	s.connect((config.TWITCH_HOST, config.TWITCH_PORT))
 	s.send("PASS {}\r\n".format(config.TWITCH_PASS).encode("utf-8"))
 	s.send("NICK {}\r\n".format(config.TWITCH_NICK).encode("utf-8"))
@@ -97,8 +95,6 @@ def bot_loop():
 			if message == "!clip" or message == "clip":
             
 				channel_id = CHAT_NAMES_TO_ID[channel]
-				print (channel_id)
-#				channel_id = "40972890"
 
 				if twitch.is_stream_live(channel_id): 
 					clip_id = twitch.create_clip(channel_id)
@@ -121,7 +117,7 @@ def bot_loop():
 						else:
 							utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
 				else:
-					utility.chat(s, channel,username + ", the stream is offline, clipping is disabled")
+					utility.chat(s, channel,username + ", the stream is offline, clipping is disabled.")
 
                     
 #			!Hey
@@ -131,7 +127,7 @@ def bot_loop():
 
 #			!help
 			if message == "!help":
-				utility.chat(s, channel,  username + ", I'm the clipping bot. type \"clip\" or \"!clip\" in chat, I'll clip the last 25 sec and post the link.")
+				utility.chat(s, channel,  "Hi, I'm the clipping bot. type \"clip\" or \"!clip\" in chat, I'll clip the last 25 sec and post the link.")
 					
             
 		for pattern in COMMANDS:
@@ -159,7 +155,7 @@ def proccess_clip(clip_id,username,channel_name):
 		utility.write_tofile(clip_url + "\n")
 
 	else:
-		utility.chat(s, channel_name, "Sorry " + username + ", twitch couldn't make the clip")
+		utility.chat(s, channel_name, "Sorry " + username + ", Twitch couldn't make the clip.")
 			
 
 #  __MAIN __
