@@ -62,10 +62,10 @@ def get_user_color(username):
 		color = USER_COLORS[username]
 	else:
 		color = 0
-		while color in {0,16,17}:
+		while color in {0,7,15,16,17}:
 			color = str(random.randint(0, 87))
-			print_toscreen(username + " color " + color)
 
+		print_toscreen(username + " color " + color)
 		USER_COLORS[username] = color
 
 	return color
