@@ -24,7 +24,7 @@ for channel_name in config.CHANNEL_NAMES:
 
 	channel_name = "#" + channel_name
 	CHAT_NAMES_TO_ID[channel_name] = str(channel_id)
-	print (channel_name + " : " + channel_id)
+	utility.print_toscreen(channel_name + " : " + channel_id)
 
 #	Connecting to Twitch IRC
 try:
@@ -44,7 +44,7 @@ try:
 
 	connected = True #Socket succefully connected
 except Exception as e:
-	print(str(e))
+	utility.print_toscreen(str(e))
 	connected = False #Socket failed to connect
 
 
@@ -53,8 +53,8 @@ except Exception as e:
 
 def bot_loop():
 	
-	time.sleep(1)
-	print ("Starting Bot Loop")
+	time.sleep(0.5)
+	utility.print_toscreen("Starting Bot Loop")
 
 	while connected:
 	
@@ -63,7 +63,7 @@ def bot_loop():
 			response = s.recv(1024).decode("utf-8")
 			
 		except Exception as e:
-			print(str(e))
+			utility.print_toscreen(str(e))
 			utility.restart()
 			
 #		PING-PONG			
@@ -72,10 +72,10 @@ def bot_loop():
 			try:	
 				s.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))			
 			except IOError as e:
-				print ("PONG error:" + str(e))
+				utility.print_toscreen("PONG error:" + str(e))
 				utility.restart()
 
-#			print("Pong")
+#			utility.print_toscreen("Pong")
 
 		else:
 		
@@ -87,9 +87,9 @@ def bot_loop():
 			try:	
 				channel = re.search(r"#\w+", response).group(0) 
 			except Exception as e:
-				print(str(e))
+				utility.print_toscreen(str(e))
 
-			print (channel + " | " + username + " : " + message)						
+			utility.print_usertoscreen(channel, username, message)						
 
 #			clip | !clip
 			if message == "!clip" or message == "clip":
@@ -107,7 +107,7 @@ def bot_loop():
 						
 						
 					else:
-						print ("Second try")
+						utility.print_toscreen("Second try","9")
 						clip_id = twitch.create_clip(channel_id)
 						
 						if (clip_id):
@@ -123,7 +123,7 @@ def bot_loop():
 #			!Hey
 			if message == "!hey":
 				utility.chat(s, channel, "Hey " + username + "! Whats up?")
-#				print (CHAT_NAMES_TO_ID[channel])
+#				utility.print_toscreen(CHAT_NAMES_TO_ID[channel])
 
 #			!help
 			if message == "!help":
@@ -137,7 +137,7 @@ def bot_loop():
 		time.sleep(0.1)
 		    
 			
-#			print(username + ": " + response)
+#			utility.print_toscreen(username + ": " + response)
 #			for pattern in config.BAN_PAT:
 #				if re.match(pattern, message):
 #					utility.ban(s, username)
@@ -146,11 +146,11 @@ def bot_loop():
 #	Thread for proccessing clip after X time
 def proccess_clip(clip_id,username,channel_name):
 	
-#	print (clip_id)    
+#	utility.print_toscreen(clip_id)    
 
 	if twitch.is_there_clip(clip_id):
 		clip_url = "https://clips.twitch.tv/" + clip_id 
-#		print (clip_url)
+#		utility.print_toscreen(clip_url)
 		utility.chat(s, channel_name, clip_url)
 		utility.write_tofile(clip_url + "\n")
 
@@ -165,14 +165,14 @@ if __name__ == "__main__":
 	
 
 #	channel_id = twitch.get_channel_id("AdmiralBahroo")
-#	print (channel_id)
+#	utility.print_toscreen(channel_id)
 
 	bot_loop()
 
 	
 #	access_token = twitch.get_access_token()
 #	twitch.auth1()
-#	print (access_token)
+#	utility.print_toscreen(access_token)
 	
 	
 	

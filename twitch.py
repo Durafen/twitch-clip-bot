@@ -19,8 +19,8 @@ access_token  = ""
 def do_refresh_token():
 	
     get_access_token() 
-    print ("Token Refreshed")
-    print (access_token)
+    utility.print_toscreen("Token Refreshed")
+    utility.print_toscreen(access_token)
 
     myThread.run()	
 	
@@ -34,14 +34,14 @@ def get_access_token_bad():
     status = "Yay"
     url = "https://id.twitch.tv/oauth2/token?client_id=" + config.CLIENT_ID + "&client_secret="  + config.CLIENT_SECRET + "&grant_type=client_credentials&scope=clips:edit"
     
-    print (url)
+    utility.print_toscreen(url)
     
     req = urllib.request.Request(url,data = '{"message":{"body":'+ status +'}}')
 
     response = urllib.request.urlopen(req)
     data = json.load(response)   
     
-    print (data)
+    utility.print_toscreen(data)
     return data["access_token"]
     
 
@@ -64,7 +64,7 @@ def auth(code):
 
     response = urllib.request.urlopen(req, data = data)
     data = json.load(response)   
-    print (data)
+    utility.print_toscreen(data)
 
 
 def get_access_token():
@@ -80,7 +80,7 @@ def get_access_token():
                                     })
 
     data = data.encode('utf-8')
-#    print (url)
+#    utility.print_toscreen(url)
     req = urllib.request.Request(url)
 
 
@@ -88,7 +88,7 @@ def get_access_token():
 	    response = urllib.request.urlopen(req, data = data)
     
     except (HTTPError, URLError) as err:
-       print ("HTTP Error" + str(err))
+       utility.print_toscreen("HTTP Error" + str(err))
        
        utility.restart()
 
@@ -98,8 +98,8 @@ def get_access_token():
     global access_token
     access_token = data["access_token"]
     
-#    print (data)
-#    print (data["access_token"])
+#    utility.print_toscreen(data)
+#    utility.print_toscreen(data["access_token"])
 
     return data["access_token"]
     
@@ -108,13 +108,13 @@ def get_access_token():
 def get_channel_id(channel_name):
 
     url = "https://api.twitch.tv/kraken/users/?api_version=5&client_id=" + config.CLIENT_ID + "&login=" + channel_name
-#    print (url)
+#    utility.print_toscreen(url)
     req = urllib.request.Request(url)
 
     response = urllib.request.urlopen(req)
     data = json.load(response)   
-#    print (data)
-#    print (data["access_token"])
+#    utility.print_toscreen(data)
+#    utility.print_toscreen(data["access_token"])
 
     return data["users"][0]["_id"]    
 
@@ -135,20 +135,20 @@ def is_there_clip(clip_id):
     try:                      
         response = urllib.request.urlopen(req)
     except (HTTPError, URLError) as err:
-        print ("HTTP Error" + str(err))
+        utility.print_toscreen("HTTP Error" + str(err))
         utility.restart()
 
     data = json.load(response)   
-#    print (data)
+#    utility.print_toscreen(data)
     
     try:
         result = data["data"][0]["id"]
     
     except IndexError:
-#        print ("false")
+#        utility.print_toscreen("false")
         return False
     
- #   print ("true")
+ #   utility.print_toscreen("true")
     return True
 
 
@@ -171,12 +171,12 @@ def create_clip(channel_id):
         response = urllib.request.urlopen(req,data)    
     
     except (HTTPError, URLError) as err:
-       print ("HTTP Error" + str(err))
+       utility.print_toscreen("HTTP Error" + str(err))
        return 0
 
     
     data = json.load(response)   
-    print (data)
+    utility.print_toscreen(data)
     
     return data["data"][0]["id"]
     
@@ -185,7 +185,7 @@ def is_stream_live(channel_id):
 	
     url = "https://api.twitch.tv/helix/streams?user_id=" + channel_id
     
-    print (url)
+    utility.print_toscreen(url)
 	
     req = urllib.request.Request(url,
                   headers = {
@@ -195,17 +195,17 @@ def is_stream_live(channel_id):
                       
     response = urllib.request.urlopen(req)
     data = json.load(response)   
-#    print (data)
+#    utility.print_toscreen(data)
     
     try:
         result = data["data"][0]["type"]
-#       print result
+#       utility.print_toscreen(result)
     
     except IndexError:
-#	  	print "false"
+#	  	utility.print_toscreen("false")
         return False
     
-#    print "true"
+#    utility.print_toscreen("true")
     return True
 
 	
@@ -217,26 +217,26 @@ def test():
      
 
     channel_id = get_channel_id("summit1g") 
-    print (channel_id)
+    utility.print_toscreen(channel_id)
 
     create_clip (channel_id)
 
-#    print is_stream_live("159319477")
+#    utility.print_toscreen(is_stream_live("159319477"))
             
 #    auth()
 #    access_token = get_access_token()
-#    print access_token
+#    utility.print_toscreen(access_token)
 
 
-print ("Starting Twitch API")
+utility.print_toscreen("Starting Twitch API")
 get_access_token() 
-print (access_token)
-print ("Token Refreshed")
+utility.print_toscreen(access_token)
+utility.print_toscreen("Token Refreshed")
 
 myThread = threading.Timer(3600, do_refresh_token)  
 myThread.start()
 
 
 if __name__ == "__main__":
-    print ("Hello")
+    utility.print_toscreen("Hello")
 	
