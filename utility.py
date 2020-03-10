@@ -61,8 +61,8 @@ def get_user_color(username):
 	if username in USER_COLORS:
 		color = USER_COLORS[username]
 	else:
-		color = 0
-		while color in {0,7,15,16,17}:
+		color = "0"
+		while color in {"0","7","15","16","17"}:
 			color = str(random.randint(0, 87))
 
 		print_toscreen(username + " color " + color)
