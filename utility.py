@@ -9,6 +9,7 @@ import os
 import random
 from sty import fg, bg, ef, rs
 
+EXCLUDE_COLORS = ["0","7","15","16","17"]
 USER_COLORS = {}
 
 def chat(sock, channel_name, msg):
@@ -62,11 +63,12 @@ def get_user_color(username):
 		color = USER_COLORS[username]
 	else:
 		color = "0"
-		while color in {"0","7","15","16","17"}:
+		while color in EXCLUDE_COLORS:
 			color = str(random.randint(0, 87))
 
 		print_toscreen(username + " color " + color)
 		USER_COLORS[username] = color
+		EXCLUDE_COLORS.append(color)
 
 	return color
 

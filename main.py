@@ -96,6 +96,8 @@ def bot_loop():
 			if message == "!clip" or message == "clip":
             
 				channel_id = CHAT_NAMES_TO_ID[channel]
+#				if (channel_id == "53177498"):
+#					channel_id = "159319477"
 
 #				if twitch.is_stream_live(channel_id): 
 				if True:
