@@ -82,6 +82,7 @@ def bot_loop():
 #			Here we go		
 			username = re.search(r"\w+", response).group(0) 
 			message = CHAT_MSG.sub("", response).rstrip()
+			message = message.lower()
 
 			channel = ""			
 			try:	
@@ -121,8 +122,8 @@ def bot_loop():
 
                     
 #			!Hey
-			if message == "!hey":
-				utility.chat(s, channel, "Hey " + username + "! Whats up?")
+			if message == "!hey" or message == "hi" or message == "hey" or message == "hello" or message == "HeyGuys":
+				utility.chat(s, channel, "Hey " + username + ", Welcome to the stream!")
 #				utility.print_toscreen(CHAT_NAMES_TO_ID[channel])
 
 #			!help
