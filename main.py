@@ -97,7 +97,8 @@ def bot_loop():
             
 				channel_id = CHAT_NAMES_TO_ID[channel]
 
-				if twitch.is_stream_live(channel_id): 
+#				if twitch.is_stream_live(channel_id): 
+				if True:
 					clip_id = twitch.create_clip(channel_id)
 					time.sleep(5)
 					
