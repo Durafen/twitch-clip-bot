@@ -176,7 +176,7 @@ def create_clip(channel_id):
 
     
     data = json.load(response)   
-    utility.print_toscreen(data)
+    utility.print_toscreen(str(data))
     
     return data["data"][0]["id"]
     
@@ -199,7 +199,7 @@ def is_stream_live(channel_id):
     
     try:
         result = data["data"][0]["type"]
-#       utility.print_toscreen(result)
+#       utility.print_toscreen(resulqt)
     
     except IndexError:
 #	  	utility.print_toscreen("false")
