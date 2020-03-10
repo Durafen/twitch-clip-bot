@@ -125,7 +125,7 @@ def bot_loop():
 
                     
 #			!Hey
-			if message == "!hey" or message == "hi" or message == "hey" or message == "hello" or message == "HeyGuys":
+			if message == "!hey" or message == "hi" or message == "hey" or message == "hello" or message == "heyguys":
 				utility.chat(s, channel, "Hey " + username + ", Welcome to the stream!")
 #				utility.print_toscreen(CHAT_NAMES_TO_ID[channel])
 
