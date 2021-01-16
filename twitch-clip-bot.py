@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import socket
 import time
@@ -93,30 +93,28 @@ def bot_loop():
             if message == "!clip" or message == "clip":
 
                 channel_id = CHAT_NAMES_TO_ID[channel]
-#                if (channel_id == "53177498"):
-#                    channel_id = "78703309"
 
-                if twitch.is_stream_live(channel_id):
-                    if True:
+#                if twitch.is_stream_live(channel_id):
+                if True:
+                    clip_id = twitch.create_clip(channel_id)
+                    time.sleep(5)
+
+                    if clip_id and twitch.is_there_clip(clip_id):
+
+                        myThread = threading.Timer(5, proccess_clip, args=[clip_id, username, channel])
+                        myThread.start()
+
+
+                    else:
+                        utility.print_toscreen("Second try", "9")
                         clip_id = twitch.create_clip(channel_id)
-                        time.sleep(5)
 
-                        if clip_id and twitch.is_there_clip(clip_id):
+                        if (clip_id):
 
-                            myThread = threading.Timer(5, proccess_clip, args=[clip_id, username, channel])
+                            myThread = threading.Timer(10, proccess_clip, args=[clip_id, username, channel])
                             myThread.start()
-
-
                         else:
-                            utility.print_toscreen("Second try", "9")
-                            clip_id = twitch.create_clip(channel_id)
-
-                            if (clip_id):
-
-                                myThread = threading.Timer(10, proccess_clip, args=[clip_id, username, channel])
-                                myThread.start()
-                            else:
-                                utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
+                            utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
                 else:
                     utility.chat(s, channel, username + ", the stream is offline, clipping is disabled.")
 
@@ -137,12 +135,6 @@ def bot_loop():
         time.sleep(0.1)
 
 
-#			utility.print_toscreen(username + ": " + response)
-#			for pattern in config.BAN_PAT:
-#				if re.match(pattern, message):
-#					utility.ban(s, username)
-#					break
-
 #	Thread for proccessing clip after X time
 def proccess_clip(clip_id, username, channel_name):
     #	utility.print_toscreen(clip_id)
@@ -161,11 +153,5 @@ def proccess_clip(clip_id, username, channel_name):
 #  ---------
 
 if __name__ == "__main__":
-    #	channel_id = twitch.get_channel_id("AdmiralBahroo")
-    #	utility.print_toscreen(channel_id)
-
     bot_loop()
 
-#	access_token = twitch.get_access_token()
-#	twitch.auth1()
-#	utility.print_toscreen(access_token)
