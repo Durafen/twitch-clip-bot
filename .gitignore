@@ -140,3 +140,9 @@ dmypy.json
 .pyre/
 config.py
 cliplog.txt
+/.idea/twitch-clipbot.iml
+/.idea/vcs.xml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/modules.xml
+/.idea/misc.xml
+/.idea/.gitignore
