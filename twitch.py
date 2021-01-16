@@ -24,26 +24,7 @@ def do_refresh_token():
 
     myThread.run()	
 	
-	
 
-def get_access_token_bad():
-
-
-#   CHANGE TO PYTHON 3?
-
-    status = "Yay"
-    url = "https://id.twitch.tv/oauth2/token?client_id=" + config.CLIENT_ID + "&client_secret="  + config.CLIENT_SECRET + "&grant_type=client_credentials&scope=clips:edit"
-    
-    utility.print_toscreen(url)
-    
-    req = urllib.request.Request(url,data = '{"message":{"body":'+ status +'}}')
-
-    response = urllib.request.urlopen(req)
-    data = json.load(response)   
-    
-    utility.print_toscreen(data)
-    return data["access_token"]
-    
 
 def auth(code):
 
@@ -176,7 +157,7 @@ def create_clip(channel_id):
 
     
     data = json.load(response)   
-    utility.print_toscreen(str(data))
+#    utility.print_toscreen(str(data))
     
     return data["data"][0]["id"]
     
