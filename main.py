@@ -31,7 +31,6 @@ try:
 	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	
 	s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
 	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, 1)
 	s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPCNT, 5)
 
@@ -97,29 +96,29 @@ def bot_loop():
             
 				channel_id = CHAT_NAMES_TO_ID[channel]
 #				if (channel_id == "53177498"):
-#					channel_id = "159319477"
+#					channel_id = "20483303"
 
-#				if twitch.is_stream_live(channel_id): 
-				if True:
-					clip_id = twitch.create_clip(channel_id)
-					time.sleep(5)
-					
-					if clip_id and twitch.is_there_clip(clip_id):
-					
-						myThread = threading.Timer(5, proccess_clip, args=[clip_id, username,channel])
-						myThread.start()
-						
-						
-					else:
-						utility.print_toscreen("Second try","9")
+				if twitch.is_stream_live(channel_id):
+					if True:
 						clip_id = twitch.create_clip(channel_id)
-						
-						if (clip_id):
-					
-							myThread = threading.Timer(10, proccess_clip, args=[clip_id, username,channel])
-							myThread.start()                        
+						time.sleep(5)
+
+						if clip_id and twitch.is_there_clip(clip_id):
+
+							myThread = threading.Timer(5, proccess_clip, args=[clip_id, username,channel])
+							myThread.start()
+
+
 						else:
-							utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
+							utility.print_toscreen("Second try","9")
+							clip_id = twitch.create_clip(channel_id)
+
+							if (clip_id):
+
+								myThread = threading.Timer(10, proccess_clip, args=[clip_id, username,channel])
+								myThread.start()
+							else:
+								utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
 				else:
 					utility.chat(s, channel,username + ", the stream is offline, clipping is disabled.")
 

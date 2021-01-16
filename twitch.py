@@ -47,8 +47,6 @@ def get_access_token_bad():
 
 def auth(code):
 
-#   CHANGE TO PYTHON 3 and CHECK!
-
     url = "https://id.twitch.tv/oauth2/token"
 #    url = "https://id.twitch.tv/oauth2/token?client_id=" + config.CLIENT_ID + "&client_secret="  + config.CLIENT_SECRET + "&code=lv1tcwmo8gidqzkj2ipk62po8evg16&grant_type=authorization_code&redirect_uri=http://localhost"
     data = urllib.parse.urlencode({
@@ -129,6 +127,7 @@ def is_there_clip(clip_id):
     req = urllib.request.Request(url,
                   headers = {
                     "Client-ID": config.CLIENT_ID ,
+                    "Authorization": "Bearer " + access_token ,
                     },
                       data = None)
                       
@@ -164,6 +163,7 @@ def create_clip(channel_id):
 
     req = urllib.request.Request(url,
                   headers = {
+                    "Client-ID": config.CLIENT_ID,
                     "Authorization": "Bearer " + access_token ,
                     }, data = data)
 
@@ -190,7 +190,8 @@ def is_stream_live(channel_id):
     req = urllib.request.Request(url,
                   headers = {
                     "Client-ID": config.CLIENT_ID ,
-                    },
+                      "Authorization": "Bearer " + access_token,
+                  },
                       data=None)
                       
     response = urllib.request.urlopen(req)
@@ -239,4 +240,5 @@ myThread.start()
 
 if __name__ == "__main__":
     utility.print_toscreen("Hello")
+    test()
 	
