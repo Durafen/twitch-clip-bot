@@ -8,8 +8,7 @@ Its my first python project, so suggestions or comments are appreciated.<br/>
 Thanks!
 <br/><br/>
 Requirements:<br/>
-pip3 install sty
-<br/>
+pip3 install -r requirements.txt<br/>
 <br/>
 Based on 2 good guides:<br />
 https://blog.christoffer.online/2019-06-05-twitch-clip-aws-lambda-function-command/ <br />
