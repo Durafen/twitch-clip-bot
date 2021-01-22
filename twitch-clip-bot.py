@@ -8,12 +8,13 @@ import threading
 import twitch
 import config
 import utility
+import debug
 
 COMMANDS = [
     #	[r"!discord", "the official discord: ____"]
 ]
 
-CHAT_MSG = re.compile(r"^:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
+CHAT_MSG = re.compile(r":\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
 
 CHAT_NAMES_TO_ID = {}
 
@@ -42,7 +43,7 @@ try:
 
     connected = True  # Socket succefully connected
 except Exception as e:
-    utility.print_toscreen(str(e))
+    debug.output_error(debug.lineno() + " - " + str(e))
     connected = False  # Socket failed to connect
 
 
@@ -60,79 +61,92 @@ def bot_loop():
             response = s.recv(1024).decode("utf-8")
 
         except Exception as e:
-            utility.print_toscreen(str(e))
-            utility.restart()
+            debug.output_error(debug.lineno() + " - " + str(e))
+            #utility.restart()
 
         #		PING-PONG
         if response == "PING :tmi.twitch.tv\r\n":
 
             try:
                 s.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
+#   			utility.print_toscreen("Pong")
+                debug.output_debug ("PONG")
             except IOError as e:
-        #        utility.print_toscreen("PONG error:" + str(e))
+                debug.output_error(debug.lineno() + " - " + "PONG error " + str(e))
                 utility.restart()
-
-        #			utility.print_toscreen("Pong")
 
         else:
 
-            #			Here we go
-            username = re.search(r"\w+", response).group(0)
-            message = CHAT_MSG.sub("", response).rstrip()
-            message = message.lower()
+            find_all = re.findall(CHAT_MSG, response)
+            for found in find_all:
 
-            channel = ""
-            try:
-                channel = re.search(r"#\w+", response).group(0)
-            except Exception as e:
-                utility.print_toscreen(str(e))
+                username = ""
+                channel = ""
+                message = ""
 
-            utility.print_usertoscreen(channel, username, message)
+                try:
 
-            #			clip | !clip
-            if message == "!clip" or message == "clip":
+                    username = re.search(r"\w+", found).group(0)
+                    channel = re.search(r"#\w+", found).group(0)
+                    message = response[response.find(found) + len(found):]
 
-                channel_id = CHAT_NAMES_TO_ID[channel]
-
-#                if twitch.is_stream_live(channel_id):
-                if True:
-                    clip_id = twitch.create_clip(channel_id)
-                    time.sleep(5)
-
-                    if clip_id and twitch.is_there_clip(clip_id):
-
-                        myThread = threading.Timer(5, proccess_clip, args=[clip_id, username, channel])
-                        myThread.start()
-
-
+                    start = re.search(CHAT_MSG, message)
+                    if start:
+                        message = message[0:start.start()]
                     else:
-                        utility.print_toscreen("Second try", "9")
+                        message = message
+                    message = message.lower().rstrip()
+
+                    utility.print_usertoscreen(channel, username, message)
+                except Exception as e:
+                    debug.output_error(debug.lineno() + " - " + str(e))
+
+                #			clip | !clip
+                if message == "!clip" or message == "clip" or message == "clip it":
+
+                    channel_id = CHAT_NAMES_TO_ID[channel]
+                    debug.output_debug (username + ": " + message + " " + channel_id)
+
+
+    #                if twitch.is_stream_live(channel_id):
+                    if True:
                         clip_id = twitch.create_clip(channel_id)
+                        time.sleep(5)
 
-                        if (clip_id):
+                        if clip_id and twitch.is_there_clip(clip_id):
 
-                            myThread = threading.Timer(10, proccess_clip, args=[clip_id, username, channel])
+                            myThread = threading.Timer(5, proccess_clip, args=[clip_id, username, channel])
                             myThread.start()
+
+
                         else:
-                            utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
-                else:
-                    utility.chat(s, channel, username + ", the stream is offline, clipping is disabled.")
+                            utility.print_toscreen("Second try", "9")
+                            clip_id = twitch.create_clip(channel_id)
 
-#           			!Hey
-#            if message == "!hey" or message == "hi" or message == "hey" or message == "hello" or message == "heyguys":
-#               utility.chat(s, channel, "Hey " + username + ", Welcome to the stream!")
-#				utility.print_toscreen(CHAT_NAMES_TO_ID[channel])
+                            if (clip_id):
 
-            #			!help
-            if message == "!help":
-                utility.chat(s, channel,
-                             "Hi, I'm the clipping bot. type \"clip\" or \"!clip\" in chat, I'll clip the last 25 sec and post the link.")
+                                myThread = threading.Timer(10, proccess_clip, args=[clip_id, username, channel])
+                                myThread.start()
+                            else:
+                                utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
+                    else:
+                        utility.chat(s, channel, username + ", the stream is offline, clipping is disabled.")
+
+    #           			!Hey
+    #            if message == "!hey" or message == "hi" or message == "hey" or message == "hello" or message == "heyguys":
+    #               utility.chat(s, channel, "Hey " + username + ", Welcome to the stream!")
+    #				utility.print_toscreen(CHAT_NAMES_TO_ID[channel])
+
+                #			!help
+                if message == "!help":
+                    utility.chat(s, channel,
+                                 "Hi, I'm the clipping bot. type \"clip\" or \"!clip\" in chat, I'll clip the last 25 sec and post the link.")
 
         for pattern in COMMANDS:
             if re.match(pattern[0], message):
                 utility.chat(s, channel, pattern[1])
 
-        time.sleep(0.1)
+#        time.sleep(0.1)
 
 
 #	Thread for proccessing clip after X time

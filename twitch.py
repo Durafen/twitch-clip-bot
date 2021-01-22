@@ -11,6 +11,7 @@ import threading
 
 import utility
 import config
+import debug
 
 access_token = ""
 
@@ -61,7 +62,7 @@ def get_access_token():
         response = urllib.request.urlopen(req, data=data)
 
     except (HTTPError, URLError) as err:
-        utility.print_toscreen("HTTP Error" + str(err))
+        debug.output_error(debug.lineno() + " - " + "HTTP Error: " + str(err))
 
         utility.restart()
 
@@ -81,12 +82,23 @@ def get_channel_id(channel_name):
     #    utility.print_toscreen(url)
     req = urllib.request.Request(url)
 
+    channel_id = 0
+
     response = urllib.request.urlopen(req)
     data = json.load(response)
     #    utility.print_toscreen(data)
     #    utility.print_toscreen(data["access_token"])
 
-    return data["users"][0]["_id"]
+    result = "0"
+
+    try:
+        result = data["users"][0]["_id"]
+
+    except IndexError as err:
+        debug.output_error(debug.lineno() + " - " + " Bad channel name: " + str(err))
+        return result
+
+    return result
 
 
 def is_there_clip(clip_id):
@@ -102,7 +114,7 @@ def is_there_clip(clip_id):
     try:
         response = urllib.request.urlopen(req)
     except (HTTPError, URLError) as err:
-        utility.print_toscreen("HTTP Error" + str(err))
+        debug.output_error(debug.lineno() + " - " + "HTTP Error: " + str(err))
         utility.restart()
 
     data = json.load(response)
@@ -111,8 +123,8 @@ def is_there_clip(clip_id):
     try:
         result = data["data"][0]["id"]
 
-    except IndexError:
-        #        utility.print_toscreen("false")
+    except IndexError as err:
+        debug.output_error(debug.lineno() + " - " + "Index Error: " + str(err))
         return False
 
     #   utility.print_toscreen("true")
@@ -137,7 +149,7 @@ def create_clip(channel_id):
         response = urllib.request.urlopen(req, data)
 
     except (HTTPError, URLError) as err:
-        utility.print_toscreen("HTTP Error" + str(err))
+        debug.output_error("HTTP Error: " + str(err) + debug.lineno())
         return 0
 
     data = json.load(response)
@@ -166,7 +178,8 @@ def is_stream_live(channel_id):
         result = data["data"][0]["type"]
     #       utility.print_toscreen(resulqt)
 
-    except IndexError:
+    except IndexError as err:
+        debug.output_error(debug.lineno() + " - " + "Index Error" + str(err))
         #	  	utility.print_toscreen("false")
         return False
 

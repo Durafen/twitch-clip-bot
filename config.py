@@ -6,7 +6,7 @@ TWITCH_NICK = "BOT TWITCH NICK"            # Twitch username your using for your
 TWITCH_PASS = "OATH TWITCH TOKEN"          # Twitch OAuth token from https://twitchapps.com/tmi/
 
 TWITCH_RATE = (20/30) # messages per seccond
-
+DEBUG = 1
 CHANNEL_NAMES = ["channel1","channel2","channel3"]
 
 CLIENT_ID = "TWITCH APP CLIENT ID"         # https://dev.twitch.tv/console/apps/
@@ -17,4 +17,3 @@ CLIENT_REFRESH_TOKEN = "TWITCH APP REFRESH TOKEN" # See instuction bellow
 #https://id.twitch.tv/oauth2/authorize?response_type=code&client_id=CLIENT_ID&redirect_uri=http://localhost&scope=clips:edit
 #Take the code from url response and get the refresh token from terminal (change CLIENT_ID, CLIENT_SECRET, CODE)
 #curl -X POST -k -i 'https://id.twitch.tv/oauth2/token?client_id=CLIENT_ID&client_secret=CLIENT_SECRET&code=CODE&grant_type=authorization_code&redirect_uri=http://localhost'
-

@@ -7,7 +7,11 @@ import datetime
 import sys
 import os
 import random
+import debug
 from sty import fg, bg, ef, rs
+
+ROWS, COLUMNS = os.popen('stty size', 'r').read().split()
+MAX_MSG_SIZE = int(COLUMNS)
 
 EXCLUDE_COLORS = ["0", "7", "15", "16", "17"]
 USER_COLORS = {}
@@ -17,15 +21,7 @@ def chat(sock, channel_name, msg):
     (sock.send(("PRIVMSG {} :{}\r\n".format(channel_name, msg)).encode("UTF-8")))
 
     print_toscreen(channel_name + " |-> " + msg)
-
-
-# def ban(sock, user):
-
-#	chat(sock, ".ban {}".format(user))
-
-# def timeout(sock, user, secs=600):
-
-#	chat(sock, ".timeout {}".format(user, secs))
+    debug.output_debug(channel_name + " |-> " + msg)
 
 
 def restart():
@@ -54,8 +50,18 @@ def print_usertoscreen(channel, username, message):
     if not (username == ""):
         color = get_user_color(username)
 
-    #	print(fg(int(color)) + currentDT.strftime("%H:%M") + fg.rs + " " + text )
-    print(currentDT.strftime("%H:%M") + "\t" + channel + " | " + fg(int(color)) + username + fg.rs + "\t: " + message)
+
+    user_txt = username
+    if len(username) < 8:
+        user_txt = user_txt + "\t"
+    if len(username) < 16:
+        user_txt = user_txt + "\t"
+
+    msg = currentDT.strftime("%H:%M") + "\t" + channel + " | " + fg(int(color)) + user_txt + fg.rs + ": " + message
+    msg = (msg[:MAX_MSG_SIZE] + '..') if len(msg) > MAX_MSG_SIZE else msg
+
+    print(msg)
+
 
 
 def get_user_color(username):
@@ -68,8 +74,8 @@ def get_user_color(username):
         while color in EXCLUDE_COLORS:
             color = str(random.randint(0, 87))
 
-        print_toscreen(username + " color " + color)
+#        print_toscreen(username + " color " + color)
         USER_COLORS[username] = color
-        EXCLUDE_COLORS.append(color)
+#        EXCLUDE_COLORS.append(color)
 
     return color
