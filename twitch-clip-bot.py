@@ -97,9 +97,10 @@ def bot_loop():
                         message = message[0:start.start()]
                     else:
                         message = message
-                    message = message.lower().rstrip()
 
                     utility.print_usertoscreen(channel, username, message)
+                    message = message.lower().rstrip()
+
                 except Exception as e:
                     debug.output_error(debug.lineno() + " - " + str(e))
 
