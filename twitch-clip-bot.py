@@ -79,57 +79,58 @@ def bot_loop():
                 debug.output_error(debug.lineno() + " - " + "PONG error " + str(e))
                 utility.restart()
 
-
         find_all = re.findall(CHAT_MSG, response)
 
-        if find_all:
+        for found in find_all:
 
-            for found in find_all:
+            username = ""
+            channel = ""
+            message = ""
 
-                username = ""
-                channel = ""
-                message = ""
+            try:
 
-                try:
+                username = re.search(r"\w+", found).group(0)
+                channel = re.search(r"#\w+", found).group(0)
+                message = response[response.find(found) + len(found):]
 
-                    username = re.search(r"\w+", found).group(0)
-                    channel = re.search(r"#\w+", found).group(0)
-                    message = response[response.find(found) + len(found):]
+                start = re.search(CHAT_MSG, message)
+                if start:
+                    message = message[0:start.start()]
+                else:
+                    message = message
 
-                    start = re.search(CHAT_MSG, message)
-                    if start:
-                        message = message[0:start.start()]
-                    else:
-                        message = message
+                utility.print_usertoscreen(channel, username, message.rstrip())
+                message = message.lower().rstrip()
 
-                    utility.print_usertoscreen(channel, username, message.rstrip())
-                    message = message.lower().rstrip()
+            except Exception as e:
+                debug.output_error(debug.lineno() + " - " + str(e))
 
-                except Exception as e:
-                    debug.output_error(debug.lineno() + " - " + str(e))
+            #			clip | !clip
+            if message == "!clip" or message == "clip" or message == "clip it":
 
-                #			clip | !clip
-                if message == "!clip" or message == "clip" or message == "clip it":
+                channel_id = CHAT_NAMES_TO_ID[channel]
+                debug.output_debug(channel + " | " + username + ": " + message)
 
-                    channel_id = CHAT_NAMES_TO_ID[channel]
-                    debug.output_debug(channel + " | " + username + ": " + message)
+                clip_thread = threading.Timer(5, create_clip, args=[channel, channel_id, username])
+                clip_thread.start()
 
-                    clip_thread = threading.Timer(5, create_clip, args=[channel, channel_id, username])
-                    clip_thread.start()
+            #           			!Hey
+#            if message == "!hey" or message == "hi" or message == "hey" or message == "hello" or message == "heyguys":
+#               utility.chat(s, channel, "Hey " + username + ", Welcome to the stream!")
+#				utility.print_toscreen(CHAT_NAMES_TO_ID[channel])
 
-                #           			!Hey
-    #            if message == "!hey" or message == "hi" or message == "hey" or message == "hello" or message == "heyguys":
-    #               utility.chat(s, channel, "Hey " + username + ", Welcome to the stream!")
-    #				utility.print_toscreen(CHAT_NAMES_TO_ID[channel])
+            #			!help
+            if message == "!help":
+                utility.chat(s, channel,
+                             "Hi, I'm the clipping bot. type \"clip\" or \"!clip\" in chat, I'll clip the last 25 sec and post the link.")
 
-                #			!help
-                if message == "!help":
-                    utility.chat(s, channel,
-                                 "Hi, I'm the clipping bot. type \"clip\" or \"!clip\" in chat, I'll clip the last 25 sec and post the link.")
+            if re.search(config.TWITCH_NICK, message):
+                debug.output_debug(channel + " | " + username + ": " + message)
 
-        for pattern in COMMANDS:
-            if re.match(pattern[0], message):
-                utility.chat(s, channel, pattern[1])
+
+#        for pattern in COMMANDS:
+#            if re.match(pattern[0], message):
+#                utility.chat(s, channel, pattern[1])
 
 
 #	Thread for creating clip
