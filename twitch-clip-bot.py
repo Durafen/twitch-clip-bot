@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import socket
+import ssl
 import time
 import re
 import threading
@@ -28,7 +29,8 @@ for channel_name in config.CHANNEL_NAMES:
 
 #	Connecting to Twitch IRC
 try:
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s_p = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s = ssl.wrap_socket(s_p)
 
     s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
     s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, 1)
