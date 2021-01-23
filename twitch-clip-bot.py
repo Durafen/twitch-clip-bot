@@ -108,33 +108,12 @@ def bot_loop():
                 if message == "!clip" or message == "clip" or message == "clip it":
 
                     channel_id = CHAT_NAMES_TO_ID[channel]
-                    debug.output_debug (channel + " | " + username + ": " + message)
+                    debug.output_debug(channel + " | " + username + ": " + message)
 
-    #                if twitch.is_stream_live(channel_id):
-                    if True:
-                        clip_id = twitch.create_clip(channel_id)
-                        time.sleep(5)
+                    clip_thread = threading.Timer(5, create_clip, args=[channel, channel_id, username])
+                    clip_thread.start()
 
-                        if clip_id and twitch.is_there_clip(clip_id):
-
-                            myThread = threading.Timer(5, proccess_clip, args=[clip_id, username, channel])
-                            myThread.start()
-
-
-                        else:
-                            utility.print_toscreen("Second try", "9")
-                            clip_id = twitch.create_clip(channel_id)
-
-                            if (clip_id):
-
-                                myThread = threading.Timer(10, proccess_clip, args=[clip_id, username, channel])
-                                myThread.start()
-                            else:
-                                utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
-                    else:
-                        utility.chat(s, channel, username + ", the stream is offline, clipping is disabled.")
-
-    #           			!Hey
+                #           			!Hey
     #            if message == "!hey" or message == "hi" or message == "hey" or message == "hello" or message == "heyguys":
     #               utility.chat(s, channel, "Hey " + username + ", Welcome to the stream!")
     #				utility.print_toscreen(CHAT_NAMES_TO_ID[channel])
@@ -148,16 +127,41 @@ def bot_loop():
             if re.match(pattern[0], message):
                 utility.chat(s, channel, pattern[1])
 
-#        time.sleep(0.1)
+
+#	Thread for creating clip
+def create_clip(channel, channel_id, username):
+       
+#   if twitch.is_stream_live(channel_id):
+    if True:
+        clip_id = twitch.create_clip(channel_id)
+        time.sleep(5)
+    
+        if clip_id and twitch.is_there_clip(clip_id):
+    
+            clip_proccess_thread = threading.Timer(0, proccess_clip, args=[clip_id, username, channel])
+            clip_proccess_thread.start()
+        
+        else:
+            debug.output_debug("Second try")
+            clip_id = twitch.create_clip(channel_id)
+            time.sleep(10)
+
+            if (clip_id):
+    
+                clip_proccess_thread = threading.Timer(0, proccess_clip, args=[clip_id, username, channel])
+                clip_proccess_thread.start()
+            else:
+                utility.chat(s, channel, "Sorry " + username + ", couldn't make your clip")
+    else:
+        utility.chat(s, channel, username + ", the stream is offline, clipping is disabled.")
 
 
 #	Thread for proccessing clip after X time
 def proccess_clip(clip_id, username, channel_name):
-    #	utility.print_toscreen(clip_id)
 
     if twitch.is_there_clip(clip_id):
         clip_url = "https://clips.twitch.tv/" + clip_id
-        #		utility.print_toscreen(clip_url)
+
         utility.chat(s, channel_name, clip_url)
         utility.write_tofile(clip_url + "\n")
 
@@ -165,7 +169,8 @@ def proccess_clip(clip_id, username, channel_name):
         utility.chat(s, channel_name, "Sorry " + username + ", Twitch couldn't make the clip.")
 
 
-#  __MAIN __
+#  ---------
+#    MAIN  
 #  ---------
 
 if __name__ == "__main__":
