@@ -98,7 +98,7 @@ def bot_loop():
                     else:
                         message = message
 
-                    utility.print_usertoscreen(channel, username, message)
+                    utility.print_usertoscreen(channel, username, message.rstrip())
                     message = message.lower().rstrip()
 
                 except Exception as e:
@@ -108,8 +108,7 @@ def bot_loop():
                 if message == "!clip" or message == "clip" or message == "clip it":
 
                     channel_id = CHAT_NAMES_TO_ID[channel]
-                    debug.output_debug (username + ": " + message + " " + channel_id)
-
+                    debug.output_debug (channel + " | " + username + ": " + message)
 
     #                if twitch.is_stream_live(channel_id):
                     if True:
