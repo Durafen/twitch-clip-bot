@@ -58,13 +58,15 @@ def bot_loop():
 
     while connected:
 
+        response = ""
+
         try:
 
             response = s.recv(1024).decode("utf-8")
 
         except Exception as e:
             debug.output_error(debug.lineno() + " - " + str(e))
-            #utility.restart()
+            utility.restart()
 
         #		PING-PONG
         if response == "PING :tmi.twitch.tv\r\n":
@@ -72,7 +74,7 @@ def bot_loop():
             try:
                 s.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
 #   			utility.print_toscreen("Pong")
-                debug.output_debug ("PONG")
+#                debug.output_debug ("PONG")
             except IOError as e:
                 debug.output_error(debug.lineno() + " - " + "PONG error " + str(e))
                 utility.restart()
