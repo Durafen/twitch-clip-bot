@@ -11,7 +11,7 @@ import debug
 from sty import fg, bg, ef, rs
 
 ROWS, COLUMNS = os.popen('stty size', 'r').read().split()
-MAX_MSG_SIZE = int(COLUMNS)
+MAX_MSG_SIZE = int(COLUMNS) - 50
 
 EXCLUDE_COLORS = ["0", "7", "15", "16", "17"]
 USER_COLORS = {}
@@ -50,18 +50,10 @@ def print_usertoscreen(channel, username, message):
     if not (username == ""):
         color = get_user_color(username)
 
+    username = (username[:15] + '') if len(username) > 15 else username
+    msg = (message[:MAX_MSG_SIZE] + '..') if len(message) > MAX_MSG_SIZE else message
 
-    user_txt = username
-    if len(username) < 8:
-        user_txt = user_txt + "\t"
-    if len(username) < 16:
-        user_txt = user_txt + "\t"
-
-    msg = currentDT.strftime("%H:%M") + "\t" + channel + " | " + fg(int(color)) + user_txt + fg.rs + ": " + message
-    msg = (msg[:MAX_MSG_SIZE] + '..') if len(msg) > MAX_MSG_SIZE else msg
-
-    print(msg)
-
+    print('{:^6}{:<20s}{:s}{:s}{:<15s}{:s}{:^3s}{:s}'.format(currentDT.strftime("%H:%M"), channel, "| ", fg(int(color)), username, fg.rs, ":", msg))
 
 
 def get_user_color(username):
@@ -72,7 +64,7 @@ def get_user_color(username):
     else:
         color = "0"
         while color in EXCLUDE_COLORS:
-            color = str(random.randint(0, 87))
+            color = str(random.randint(0, 220))
 
 #        print_toscreen(username + " color " + color)
         USER_COLORS[username] = color
