@@ -11,7 +11,7 @@ import debug
 from sty import fg, bg, ef, rs
 
 ROWS, COLUMNS = os.popen('stty size', 'r').read().split()
-MAX_MSG_SIZE = int(COLUMNS) - 45
+MAX_MSG_SIZE = int(COLUMNS) - 46
 
 EXCLUDE_COLORS = ["0", "7", "15", "16", "17"]
 USER_COLORS = {}

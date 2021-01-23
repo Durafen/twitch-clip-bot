@@ -69,19 +69,21 @@ def bot_loop():
             utility.restart()
 
         #		PING-PONG
-        if response == "PING :tmi.twitch.tv\r\n":
+        if re.search("PING :tmi.twitch.tv",response):
 
             try:
                 s.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
-#   			utility.print_toscreen("Pong")
+# 		 utility.print_toscreen("Pong")
 #                debug.output_debug ("PONG")
             except IOError as e:
                 debug.output_error(debug.lineno() + " - " + "PONG error " + str(e))
                 utility.restart()
 
-        else:
 
-            find_all = re.findall(CHAT_MSG, response)
+        find_all = re.findall(CHAT_MSG, response)
+
+        if find_all:
+
             for found in find_all:
 
                 username = ""
