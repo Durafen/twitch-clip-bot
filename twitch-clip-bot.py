@@ -20,18 +20,11 @@ TWITCH_MSG = re.compile(r"(:tmi\.twitch\.tv \w+ \w+ :|:\w+.tmi\.twitch\.tv \w+ \
 
 CHAT_NAMES_TO_ID = {}
 
-#	Getting channels id from channels names
-for channel_name in config.CHANNEL_NAMES:
-    channel_id = twitch.get_channel_id(channel_name)
-
-    channel_name = "#" + channel_name
-    CHAT_NAMES_TO_ID[channel_name] = str(channel_id)
-    utility.print_toscreen(channel_name + " : " + channel_id)
-
 #	Connecting to Twitch IRC
 try:
     s_p = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s = ssl.wrap_socket(s_p)
+    s.connect((config.TWITCH_HOST, config.TWITCH_PORT))
 
     s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
     s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, 1)
@@ -39,13 +32,21 @@ try:
     if sys.platform != 'darwin':
         s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
 
-    s.connect((config.TWITCH_HOST, config.TWITCH_PORT))
     s.send("PASS {}\r\n".format(config.TWITCH_PASS).encode("utf-8"))
     s.send("NICK {}\r\n".format(config.TWITCH_NICK).encode("utf-8"))
 
-    time.sleep(0.5)
     for channel_name in config.CHANNEL_NAMES:
-        s.send("JOIN {}\r\n".format("#" + channel_name).encode("utf-8"))
+
+        time.sleep(0.2)
+
+#       Getting channels id from channels names
+        channel_id = twitch.get_channel_id(channel_name)
+
+        channel_name = "#" + channel_name
+        CHAT_NAMES_TO_ID[channel_name] = str(channel_id)
+
+        s.send("JOIN {}\r\n".format(channel_name).encode("utf-8"))
+        utility.print_toscreen(channel_name + " : " + channel_id)
 
     connected = True  # Socket succefully connected
 except Exception as e:
@@ -58,7 +59,7 @@ except Exception as e:
 #	--------
 
 def bot_loop():
-    time.sleep(0.5)
+    time.sleep(1)
     utility.print_toscreen("Starting Bot Loop")
 
     while connected:
@@ -66,20 +67,20 @@ def bot_loop():
         response = ""
 
         try:
-
             response = s.recv(1024).decode("utf-8")
 
         except Exception as e:
             debug.output_error(debug.lineno() + " - " + str(e))
             utility.restart()
 
-        #		PING-PONG
+#	PING-PONG
         if re.search("PING :tmi.twitch.tv",response):
 
             try:
                 s.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
 # 		 utility.print_toscreen("Pong")
 #                debug.output_debug ("PONG")
+                utility.print_usertoscreen("server", "twitch", "ping")
             except IOError as e:
                 debug.output_error(debug.lineno() + " - " + "PONG error " + str(e))
                 utility.restart()
@@ -189,4 +190,7 @@ def proccess_clip(clip_id, username, channel_name):
 
 if __name__ == "__main__":
     bot_loop()
+
+#TODO - add constant colors to  twitch and bot
+
 

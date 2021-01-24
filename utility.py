@@ -9,6 +9,7 @@ import time
 from sty import fg
 
 import debug
+import config
 
 ROWS, COLUMNS = os.popen('stty size', 'r').read().split()
 MAX_MSG_SIZE: int = int(COLUMNS) - 44
@@ -20,12 +21,12 @@ USER_COLORS = {}
 def chat(sock, channel_name, msg):
     (sock.send(("PRIVMSG {} :{}\r\n".format(channel_name, msg)).encode("UTF-8")))
 
-    print_toscreen(channel_name + " |-> " + msg)
+    print_usertoscreen(channel_name, config.TWITCH_NICK , "--> " + msg)
     debug.output_debug(channel_name + " |-> " + msg)
 
 
 def restart():
-    print_toscreen("Restarting", "9")
+    print_usertoscreen("system", "bot" , "Restarting")
     time.sleep(5)
     # os.execv(__file__, sys.argv)
     os.execv(sys.executable, ['python3'] + sys.argv)
