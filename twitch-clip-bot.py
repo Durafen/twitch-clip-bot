@@ -33,6 +33,7 @@ try:
     s = ssl.wrap_socket(s_p)
 
     s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
+    s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
     s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, 1)
     s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPCNT, 5)
 
