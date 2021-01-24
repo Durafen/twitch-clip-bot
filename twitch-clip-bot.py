@@ -16,8 +16,7 @@ COMMANDS = [
     #	[r"!discord", "the official discord: ____"]
 ]
 
-CHAT_MSG = re.compile(r":\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
-TWITCH_MSG = re.compile(r"(:tmi\.twitch\.tv \w+ \w+ :|:\w+.tmi\.twitch\.tv \w+ \w+ )")
+TWITCH_MSG = re.compile(r"(:tmi\.twitch\.tv \w+ \w+ :|:\w+.tmi\.twitch\.tv \w+ \w+ |:\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :)")
 
 CHAT_NAMES_TO_ID = {}
 
@@ -87,6 +86,9 @@ def bot_loop():
 
         find_all_twitch = re.findall(TWITCH_MSG, response)
         for found in find_all_twitch:
+            username = ""
+            channel = ""
+            message = ""
 
             try:
 
@@ -98,38 +100,19 @@ def bot_loop():
                 else:
                     message = message
 
-                utility.print_usertoscreen("server", "twitch", message.strip())
-                message = message.lower().rstrip()
+                if re.search("PRIVMSG",found):
+                    channel = re.search(r"#\w+", found).group(0)
+                    username = re.search(r"\w+", found).group(0)
 
-            except Exception as e:
-                debug.output_error(debug.lineno() + " - " + str(e))
-
-
-        find_all = re.findall(CHAT_MSG, response)
-
-        for found in find_all:
-
-            username = ""
-            channel = ""
-            message = ""
-
-            try:
-
-                username = re.search(r"\w+", found).group(0)
-                channel = re.search(r"#\w+", found).group(0)
-                message = response[response.find(found) + len(found):]
-
-                start = re.search(CHAT_MSG, message)
-                if start:
-                    message = message[0:start.start()]
+                    utility.print_usertoscreen(channel, username, message.rstrip())
                 else:
-                    message = message
+                    utility.print_usertoscreen("server", "twitch", message.strip())
 
-                utility.print_usertoscreen(channel, username, message.rstrip())
                 message = message.lower().rstrip()
 
             except Exception as e:
                 debug.output_error(debug.lineno() + " - " + str(e))
+
 
             #			clip | !clip
             if message == "!clip" or message == "clip" or message == "clip it":
