@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
+import re
 import socket
 import ssl
-import time
-import re
+import sys
 import threading
+import time
 
-import twitch
 import config
-import utility
 import debug
+import twitch
+import utility
 
 COMMANDS = [
     #	[r"!discord", "the official discord: ____"]
@@ -33,14 +34,16 @@ try:
     s = ssl.wrap_socket(s_p)
 
     s.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
-    s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
     s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPINTVL, 1)
     s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPCNT, 5)
+    if sys.platform != 'darwin':
+        s.setsockopt(socket.SOL_TCP, socket.TCP_KEEPIDLE, 1)
 
     s.connect((config.TWITCH_HOST, config.TWITCH_PORT))
     s.send("PASS {}\r\n".format(config.TWITCH_PASS).encode("utf-8"))
     s.send("NICK {}\r\n".format(config.TWITCH_NICK).encode("utf-8"))
 
+    time.sleep(0.5)
     for channel_name in config.CHANNEL_NAMES:
         s.send("JOIN {}\r\n".format("#" + channel_name).encode("utf-8"))
 
@@ -48,6 +51,7 @@ try:
 except Exception as e:
     debug.output_error(debug.lineno() + " - " + str(e))
     connected = False  # Socket failed to connect
+    utility.restart()
 
 
 #	BOT LOOP
