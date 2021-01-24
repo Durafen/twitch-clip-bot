@@ -17,6 +17,7 @@ COMMANDS = [
 ]
 
 CHAT_MSG = re.compile(r":\w+!\w+@\w+\.tmi\.twitch\.tv PRIVMSG #\w+ :")
+TWITCH_MSG = re.compile(r"(:tmi\.twitch\.tv \w+ \w+ :|:\w+.tmi\.twitch\.tv \w+ \w+ )")
 
 CHAT_NAMES_TO_ID = {}
 
@@ -83,6 +84,26 @@ def bot_loop():
             except IOError as e:
                 debug.output_error(debug.lineno() + " - " + "PONG error " + str(e))
                 utility.restart()
+
+        find_all_twitch = re.findall(TWITCH_MSG, response)
+        for found in find_all_twitch:
+
+            try:
+
+                message = response[response.find(found) + len(found):]
+
+                start = re.search(TWITCH_MSG, message)
+                if start:
+                    message = message[0:start.start()]
+                else:
+                    message = message
+
+                utility.print_usertoscreen("server", "twitch", message.strip())
+                message = message.lower().rstrip()
+
+            except Exception as e:
+                debug.output_error(debug.lineno() + " - " + str(e))
+
 
         find_all = re.findall(CHAT_MSG, response)
 
