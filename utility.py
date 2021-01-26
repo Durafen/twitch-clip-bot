@@ -69,7 +69,7 @@ def print_usertoscreen(channel, username, message):
                                                                       fg(int(color)), username, fg.rs, ":", msg))
         else:
             print(
-                '{:<7s}{:<16s}{:s}{:s}{:<15s}{:s}{:^3s}{:s}'.format("", "", "| ", fg(int(color)), "", fg.rs, ":", msg))
+                '{:<7s}{:<16s}{:s}{:s}{:<15s}{:s}{:^3s}{:s}'.format(currentDT.strftime("%H:%M"), channel, "| ", fg(int(color)), "", fg.rs, ":", msg))
 
 
 def get_user_color(username):
