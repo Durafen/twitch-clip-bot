@@ -18,8 +18,7 @@ access_token = ""
 
 def do_refresh_token():
     get_access_token()
-    utility.print_toscreen("Token Refreshed")
-    utility.print_toscreen(access_token)
+    utility.print_usertoscreen("system", "bot", "Token Refreshed " + access_token)
 
     myThread.run()
 
@@ -134,7 +133,7 @@ def is_there_clip(clip_id):
 def create_clip(channel_id):
     url = "https://api.twitch.tv/helix/clips"
     data = urllib.parse.urlencode({
-        'has_delay': 'true',
+        'has_delay': 'false',
         'broadcaster_id': channel_id,
     })
     data = data.encode('utf-8')
