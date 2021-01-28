@@ -14,12 +14,15 @@ if config.DEBUG:
 def output_error(err):
     if config.DEBUG:
         logger.error(err)
+        utility.print_usertoscreen("system", "bot", "Error: " + err)
 #        utility.print_toscreen(err)
 
 
 def output_debug(data):
     if config.DEBUG:
         logger.debug(data)
+        utility.print_usertoscreen("system", "bot", "Debug: " + data)
+
 #        utility.print_toscreen(data)
 
 def lineno():
